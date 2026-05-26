@@ -5,8 +5,19 @@ const Sidebar = ({
   setIsSidebarCollapsed,
   activeTab,
   setActiveTab,
-  onLogout
+  onLogout,
+  userName
 }) => {
+  const getInitials = (name) => {
+    if (!name) return 'AD';
+    const parts = name.trim().split(/\s+/);
+    if (parts.length >= 2) {
+      return (parts[0][0] + (parts[1][0] || '')).toUpperCase();
+    }
+    return parts[0].slice(0, 2).toUpperCase();
+  };
+  const initials = getInitials(userName);
+
   return (
     <aside
       className="glass-panel sidebar-transition d-flex flex-column justify-content-between h-100 py-4 px-3"
@@ -29,13 +40,13 @@ const Sidebar = ({
               </div>
               <div>
                 <span className="text-white fw-bold d-block leading-none fs-6">SKY MIND</span>
-                <span className="text-secondary small tracking-wider uppercase font-semibold" style={{ fontSize: '0.65rem' }}>ADMIN DECK</span>
+                <span className="text-secondary small tracking-wider uppercase font-semibold" style={{ fontSize: '0.65rem' }}>{userName}</span>
               </div>
             </div>
           ) : (
             <span className="material-symbols-outlined text-primary fs-3 mx-auto animate-pulse-cyber">psychology</span>
           )}
-          
+
           <button
             onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
             className="btn btn-sm btn-outline-secondary p-1 border-0 d-none d-lg-flex align-items-center justify-content-center"
@@ -47,15 +58,18 @@ const Sidebar = ({
         </div>
 
         {/* Navigation Links */}
-        <nav className="d-flex flex-column gap-2">
+        <nav className="d-flex flex-column border border-secondary border-opacity-25 rounded-3 overflow-hidden bg-black bg-opacity-40">
           {[
-            { id: 'overview', label: 'Overview Deck', icon: 'dashboard' },
-            { id: 'intel', label: 'Market Intel', icon: 'analytics' },
-            { id: 'synthesizer', label: 'AI Synthesizer', icon: 'terminal' },
-            { id: 'nodes', label: 'System Node Grid', icon: 'lan' },
-            { id: 'reports', label: 'Reports compiler', icon: 'download' },
-          ].map((tab) => {
+            { id: 'overview', label: 'Dashboard', icon: 'settings' },
+            { id: 'survey_record', label: 'Survey Record', icon: 'settings' },
+            { id: 'change_password', label: 'Change Password', icon: 'settings' },
+            { id: 'project', label: 'Project', icon: 'settings' },
+            { id: 'user', label: 'User', icon: 'settings' },
+            { id: 'vendor', label: 'Vendor', icon: 'settings' },
+            { id: 'vendor_survey', label: 'Vendor Survey', icon: 'settings' },
+          ].map((tab, index, arr) => {
             const isActive = activeTab === tab.id;
+            const isLast = index === arr.length - 1;
             return (
               <a
                 key={tab.id}
@@ -64,8 +78,16 @@ const Sidebar = ({
                   e.preventDefault();
                   setActiveTab(tab.id);
                 }}
-                className={`sidebar-link ${isActive ? 'active' : ''} d-flex align-items-center gap-3`}
+                className={`sidebar-link ${isActive ? 'active' : ''} d-flex align-items-center ${
+                  isSidebarCollapsed ? 'justify-content-center px-0' : 'px-3'
+                } gap-3 py-3 border-start-0 border-end-0 border-top-0 ${
+                  isLast ? 'border-bottom-0' : 'border-bottom border-secondary border-opacity-20'
+                } rounded-0`}
                 title={tab.label}
+                style={{
+                  margin: 0,
+                  transform: 'none',
+                }}
               >
                 <span className="material-symbols-outlined fs-5">{tab.icon}</span>
                 {!isSidebarCollapsed && <span className="small">{tab.label}</span>}
@@ -81,16 +103,16 @@ const Sidebar = ({
           {!isSidebarCollapsed ? (
             <div className="d-flex align-items-center gap-2">
               <div className="rounded-circle bg-primary bg-opacity-25 border border-primary d-flex align-items-center justify-content-center text-white fw-bold" style={{ width: '38px', height: '38px', fontSize: '0.9rem' }}>
-                AD
+                {initials}
               </div>
               <div>
-                <h6 className="text-white mb-0 small fw-semibold">Admin Deck</h6>
+                <h6 className="text-white mb-0 small fw-semibold">{userName}</h6>
                 {/* <span className="text-neon-cyan" style={{ fontSize: '0.7rem' }}>Sysop Level 4</span> */}
               </div>
             </div>
           ) : (
             <div className="rounded-circle bg-primary bg-opacity-25 border border-primary d-flex align-items-center justify-content-center text-white fw-bold" style={{ width: '38px', height: '38px', fontSize: '0.9rem' }}>
-              AD
+              {initials}
             </div>
           )}
 

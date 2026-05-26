@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+settings.json
+.env
+package-lock.json
+.gitignore
+.gitignore

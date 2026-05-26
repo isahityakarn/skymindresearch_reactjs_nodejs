@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import api from '../services/axios';
+import { useNavigate } from 'react-router-dom';
 import Button from './ui/Button';
 import TextInput from './ui/TextInput';
-import TextArea from './ui/TextArea';
+import { login } from '../services/users';
+import { setToken, setUser } from '../utils/storage';
 
-const LoginPage = ({ onClose, onLoginSuccess }) => {
+const LoginPage = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -15,13 +17,17 @@ const LoginPage = ({ onClose, onLoginSuccess }) => {
     setMessage("");
 
     try {
-      const response = await api.post("/users/login", { email, password });
+
+      const loginData = await login(email, password);
+      console.log("loginData", loginData)
+      setToken(loginData.data.token);
+      setUser(loginData.data.user);
+
       setMessage("Login successful");
       setIsError(false);
 
-      if (onLoginSuccess) {
-        onLoginSuccess();
-      }
+      // Navigate to admin dashboard
+      navigate('/admin/dashboard');
     } catch (error) {
       setMessage(error.response?.data?.message || "Login failed");
       setIsError(true);
@@ -54,7 +60,7 @@ const LoginPage = ({ onClose, onLoginSuccess }) => {
                   </div>
                 </div>
 
-                <Button variant="secondary" size="lg" className="mt-3" onClick={onClose}>
+                <Button variant="secondary" size="lg" className="mt-3" onClick={() => navigate('/')}>
                   Back to home
                 </Button>
               </div>

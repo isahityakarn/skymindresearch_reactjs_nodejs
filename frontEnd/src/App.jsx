@@ -1,52 +1,33 @@
 
-import { useState } from 'react';
-import TopNavBar from './components/TopNavBar';
-import HeroSection from './components/HeroSection';
-import TrustedBySection from './components/TrustedBySection';
-import ServicesSection from './components/ServicesSection';
-import ProcessSection from './components/ProcessSection';
-import InsightsSection from './components/InsightsSection';
-import ContactSection from './components/ContactSection';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import LandingPage from './pages/LandingPage';
 import LoginPage from './components/LoginPage';
-import Footer from './components/Footer';
 import Dashboard from './components/admin/Dashboard';
+import { getToken } from './utils/storage';
+
+// Protected Route Component
+function ProtectedRoute({ children }) {
+  const token = getToken();
+  return token ? children : <Navigate to="/login" replace />;
+}
 
 function App() {
-  // Routing State: 'landing' | 'login' | 'dashboard'
-  const [view, setView] = useState('landing');
-
-  // Handle successful login
-  const handleLoginSuccess = () => {
-    setView('dashboard');
-  };
-
-  if (view === 'dashboard') {
-    return <Dashboard onLogout={() => setView('landing')} />;
-  }
-
   return (
-    <div className="bg-dark text-white">
-      <TopNavBar 
-        onLoginClick={() => setView('login')} 
-        onPortalClick={() => setView('dashboard')}
-      />
-      {view === 'login' ? (
-        <LoginPage 
-          onClose={() => setView('landing')} 
-          onLoginSuccess={handleLoginSuccess}
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route 
+          path="/admin/dashboard" 
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          } 
         />
-      ) : (
-        <main className="pt-5">
-          <HeroSection />
-          <TrustedBySection />
-          <ServicesSection />
-          <ProcessSection />
-          <InsightsSection />
-          <ContactSection />
-        </main>
-      )}
-      <Footer />
-    </div>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Router>
   );
 }
 

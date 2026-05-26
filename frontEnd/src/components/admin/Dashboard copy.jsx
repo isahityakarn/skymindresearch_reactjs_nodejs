@@ -3,12 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import Button from '../ui/Button';
 import Sidebar from './Sidebar';
 import Header from './Header';
-import { getUser, removeToken, removeUser } from '../../utils/storage';
+import { removeToken, removeUser } from '../../utils/storage';
 
 export default function Dashboard() {
   const navigate = useNavigate();
   
-  // const  [userName, setUserName] = useState('Admin');
   // Logout handler
   const handleLogout = () => {
     removeToken();
@@ -16,10 +15,6 @@ export default function Dashboard() {
     navigate('/');
   };
   
-  const user = getUser();
-// setUserName(user?.name);
-// console.log(user?.name);
-
   // Navigation State
   const [activeTab, setActiveTab] = useState('overview');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -392,7 +387,212 @@ STATUS: MITIGATION VECTOR READY FOR TEST INJECT.`
           {activeTab === 'overview' && (
             <div className="row g-4">
               
-        
+              {/* Left Column: Interactive Topology + Systems Panel */}
+              <div className="col-12 col-lg-8">
+                
+                {/* SVG Visual Network Topology Map */}
+                <div className="glass-card p-4 mb-4">
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                      <h4 className="text-white h5 mb-1 fw-bold d-flex align-items-center gap-2">
+                        Neural Topology Intelligence Map
+                        <span className="badge badge-neon-cyan fs-8 text-uppercase px-2 py-0.5">dynamic</span>
+                      </h4>
+                      <p className="text-secondary small mb-0">Hover/click nodes to intercept secure communication logs in real time.</p>
+                    </div>
+                    <span className="material-symbols-outlined text-secondary fs-5">hub</span>
+                  </div>
+
+                  <div className="row g-3 align-items-center">
+                    <div className="col-12 col-md-7 border-end border-secondary border-opacity-25">
+                      <div className="bg-black bg-opacity-50 rounded-4 border border-secondary border-opacity-20 d-flex justify-content-center align-items-center p-2" style={{ minHeight: '300px' }}>
+                        <svg viewBox="0 0 420 300" className="w-100 h-100" style={{ maxHeight: '280px' }}>
+                          {/* Connections */}
+                          <line x1="80" y1="120" x2="180" y2="70" stroke="rgba(13, 110, 253, 0.4)" strokeWidth="2" strokeDasharray="4,4" />
+                          <line x1="180" y1="70" x2="280" y2="150" stroke="rgba(13, 110, 253, 0.4)" strokeWidth="2" />
+                          <line x1="80" y1="120" x2="150" y2="220" stroke="rgba(13, 110, 253, 0.4)" strokeWidth="2" />
+                          <line x1="150" y1="220" x2="280" y2="150" stroke="rgba(13, 110, 253, 0.4)" strokeWidth="2" strokeDasharray="3,3" />
+                          <line x1="280" y1="150" x2="350" y2="90" stroke="rgba(13, 110, 253, 0.4)" strokeWidth="2" />
+                          <line x1="180" y1="70" x2="350" y2="90" stroke="rgba(13, 110, 253, 0.2)" strokeWidth="1" />
+
+                          {/* Glow nodes on hover */}
+                          {neuralNodes.map((node) => (
+                            <g
+                              key={node.id}
+                              style={{ cursor: 'pointer' }}
+                              onClick={() => {
+                                setActiveNodeDetail(node);
+                                addNotification(`Intercepted Node [${node.id}] feed successfully`, 'success');
+                              }}
+                              onMouseEnter={() => setActiveNodeDetail(node)}
+                            >
+                              <circle
+                                cx={node.cx}
+                                cy={node.cy}
+                                r="12"
+                                fill="rgba(2, 6, 23, 0.9)"
+                                stroke={node.color}
+                                strokeWidth="3"
+                                className="sidebar-transition"
+                                style={{
+                                  filter: `drop-shadow(0 0 6px ${node.color})`,
+                                  transformOrigin: `${node.cx}px ${node.cy}px`
+                                }}
+                              />
+                              <circle cx={node.cx} cy={node.cy} r="4" fill={node.color} />
+                              <text x={node.cx + 18} y={node.cy + 5} fill="#94a3b8" fontSize="10" fontWeight="600" fontFamily="monospace">
+                                {node.id}
+                              </text>
+                            </g>
+                          ))}
+                        </svg>
+                      </div>
+                    </div>
+
+                    <div className="col-12 col-md-5">
+                      <div className="p-3 bg-black bg-opacity-40 rounded-3 h-100 border border-secondary border-opacity-15">
+                        <span className="text-secondary small tracking-wider text-uppercase fw-semibold d-block mb-2 font-mono">NODE SPECTRAL READOUT</span>
+                        {activeNodeDetail ? (
+                          <div>
+                            <div className="d-flex align-items-center gap-2 mb-2">
+                              <span className="badge rounded-pill px-2" style={{ backgroundColor: activeNodeDetail.color, color: '#000' }}>
+                                {activeNodeDetail.id}
+                              </span>
+                              <h5 className="text-white h6 mb-0 font-bold">{activeNodeDetail.label}</h5>
+                            </div>
+                            <p className="text-secondary small mb-3 leading-relaxed">{activeNodeDetail.info}</p>
+                            <div className="bg-black bg-opacity-70 p-2 rounded border border-secondary border-opacity-20 font-mono" style={{ fontSize: '0.75rem' }}>
+                              <span className="text-neon-cyan d-block">IP: 192.168.4.{Math.floor(Math.random() * 254)}</span>
+                              <span className="text-neon-emerald d-block">LATENCY: {Math.floor(8 + Math.random() * 20)}ms</span>
+                              <span className="text-neon-purple d-block">INTELLIGENCE LOAD: {Math.floor(20 + Math.random() * 80)}%</span>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="text-center py-5 text-secondary">
+                            <span className="material-symbols-outlined fs-2 mb-2 animate-pulse-cyber">sensors</span>
+                            <p className="small mb-0">Hover or click on any node inside the topology model to begin active analytical parsing.</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Operations Control Deck */}
+                <div className="glass-card p-4">
+                  <h4 className="text-white h5 mb-3 fw-bold d-flex align-items-center gap-2">
+                    Systems Control Deck
+                    <span className="badge badge-neon-emerald fs-8 text-uppercase px-2 py-0.5">verified</span>
+                  </h4>
+                  <div className="row g-3">
+                    <div className="col-12 col-md-6">
+                      <div className="p-3 bg-black bg-opacity-40 rounded-4 border border-secondary border-opacity-20">
+                        <div className="d-flex justify-content-between align-items-center mb-2">
+                          <h6 className="text-white mb-0 fw-semibold small">Database Indexing Optimizer</h6>
+                          <span className="material-symbols-outlined text-secondary fs-5">database</span>
+                        </div>
+                        <p className="text-secondary small mb-3">Runs low-level database defragging and clears old analytics caching logs.</p>
+                        
+                        {databaseOptimizing ? (
+                          <div>
+                            <div className="progress mb-2" style={{ height: '6px' }}>
+                              <div className="progress-bar progress-bar-striped progress-bar-animated progress-glow-cyan" style={{ width: `${dbProgress}%` }}></div>
+                            </div>
+                            <span className="text-neon-cyan font-mono small d-block">COMPRESSING DB TABLES: {dbProgress}%</span>
+                          </div>
+                        ) : (
+                          <Button variant="primary" size="sm" onClick={handleDatabaseOptimize} className="w-100 py-2 border-0">
+                            Optimize System Indexing
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="col-12 col-md-6">
+                      <div className="p-3 bg-black bg-opacity-40 rounded-4 border border-secondary border-opacity-20">
+                        <div className="d-flex justify-content-between align-items-center mb-2">
+                          <h6 className="text-white mb-0 fw-semibold small">Decentralized Threat Firewall</h6>
+                          <span className="material-symbols-outlined text-neon-rose fs-5">security</span>
+                        </div>
+                        <p className="text-secondary small mb-3">Engage absolute zero-trust quarantine protocols across all active telemetry clusters.</p>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => {
+                            addNotification('ZERO-TRUST PROTOCOL: Global clusters locked and monitored.', 'warning');
+                            const now = new Date();
+                            const timeStr = now.toTimeString().split(' ')[0];
+                            setLogs(prev => [
+                              { id: Date.now(), time: timeStr, msg: 'WARNING: Zero-Trust quarantined active across APAC-04 and EU-02 clusters.', type: 'warning' },
+                              ...prev
+                            ]);
+                          }}
+                          className="w-100 py-2 btn btn-outline-danger border-danger border-opacity-50 text-danger"
+                        >
+                          Lockdown Secure Grid
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Right Column: Live Event Stream Ticker */}
+              <div className="col-12 col-lg-4">
+                <div className="glass-card p-4 h-100 d-flex flex-column justify-content-between" style={{ minHeight: '450px' }}>
+                  <div>
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                      <div>
+                        <h4 className="text-white h5 mb-1 fw-bold d-flex align-items-center gap-2">
+                          Live Intel Stream
+                          <span className="position-relative d-inline-flex" style={{ width: '8px', height: '8px' }}>
+                            <span className="animate-pulse-cyber absolute inline-flex h-full w-full rounded-full bg-danger opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-danger"></span>
+                          </span>
+                        </h4>
+                        <p className="text-secondary small mb-0">Decoded administrative events feed.</p>
+                      </div>
+                      <span className="material-symbols-outlined text-secondary fs-5">terminal</span>
+                    </div>
+
+                    <div className="dashboard-scroll pe-1" style={{ maxHeight: '350px' }}>
+                      {logs.map((log) => (
+                        <div
+                          key={log.id}
+                          className="p-2 mb-2 bg-black bg-opacity-40 rounded border-start border-3 border-opacity-50 border-secondary font-mono"
+                          style={{
+                            fontSize: '0.75rem',
+                            borderLeftColor: log.type === 'success' ? '#10b981' : log.type === 'warning' ? '#f43f5e' : '#0d6efd'
+                          }}
+                        >
+                          <div className="d-flex justify-content-between mb-1">
+                            <span className="text-secondary">[{log.time}]</span>
+                            <span className={`text-${log.type === 'success' ? 'success' : log.type === 'warning' ? 'danger' : 'primary'} text-uppercase`} style={{ fontSize: '0.65rem', fontWeight: 'bold' }}>
+                              {log.type}
+                            </span>
+                          </div>
+                          <span className="text-white">{log.msg}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="border-top border-secondary pt-3 mt-3">
+                    <button
+                      onClick={() => {
+                        setLogs([
+                          { id: Date.now(), time: new Date().toTimeString().split(' ')[0], msg: 'Admin cleared telemetry event logs buffer.', type: 'info' }
+                        ]);
+                        addNotification('Logs buffer flushed.', 'info');
+                      }}
+                      className="btn btn-sm btn-outline-secondary w-100 py-2 rounded-3 border-secondary border-opacity-50"
+                    >
+                      Clear Terminal Buffer
+                    </button>
+                  </div>
+                </div>
+              </div>
 
             </div>
           )}
@@ -600,8 +800,178 @@ STATUS: MITIGATION VECTOR READY FOR TEST INJECT.`
             </div>
           )}
 
-      
-         
+          {/* TAB 4: SYSTEM NODE GRID */}
+          {activeTab === 'nodes' && (
+            <div>
+              <div className="mb-4">
+                <h4 className="text-white h5 mb-1 fw-bold">Active Cluster Node Deck</h4>
+                <p className="text-secondary small">Review localized analytical engine telemetry servers. Adjust slider allocations to simulate overclocking AI computing power.</p>
+              </div>
+
+              <div className="row g-4">
+                {nodes.map((node, idx) => (
+                  <div key={node.name} className="col-12 col-md-6">
+                    <div className="glass-card p-4">
+                      
+                      {/* Node Header */}
+                      <div className="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                          <div className="d-flex align-items-center gap-2">
+                            <span className="material-symbols-outlined text-neon-cyan fs-5">dns</span>
+                            <h5 className="text-white h6 mb-0 fw-bold">{node.name}</h5>
+                          </div>
+                          <span className="text-secondary small font-mono">{node.region}</span>
+                        </div>
+                        <span className={`badge ${node.status.includes('Critical') ? 'badge-neon-rose' : node.status.includes('High') ? 'bg-warning text-dark' : 'badge-neon-emerald'} px-2 py-0.5 small`}>
+                          {node.status}
+                        </span>
+                      </div>
+
+                      {/* Load Stat Progress Bar */}
+                      <div className="mb-3">
+                        <div className="d-flex justify-content-between align-items-center mb-1">
+                          <span className="text-secondary small font-semibold">OVERCLOCK WORKLOAD</span>
+                          <span className={`font-mono small ${node.load > 80 ? 'text-neon-rose' : 'text-neon-cyan'}`}>{node.load}%</span>
+                        </div>
+                        <div className="progress bg-dark bg-opacity-50" style={{ height: '6px' }}>
+                          <div
+                            className={`progress-bar ${node.load > 80 ? 'progress-glow-rose bg-danger' : 'progress-glow-cyan bg-cyan'}`}
+                            role="progressbar"
+                            style={{ width: `${node.load}%` }}
+                          ></div>
+                        </div>
+                      </div>
+
+                      {/* Slider Allocator */}
+                      <div className="mb-3 p-2 bg-black bg-opacity-40 rounded-3 border border-secondary border-opacity-10">
+                        <label className="form-label text-secondary small font-mono d-flex justify-content-between align-items-center mb-1">
+                          <span>Re-allocate Node Memory Grid</span>
+                          <span className="text-white fw-bold">{node.load} GFLOPS</span>
+                        </label>
+                        <input
+                          type="range"
+                          min="10"
+                          max="95"
+                          value={node.load}
+                          onChange={(e) => handleAdjustNodeLoad(idx, parseInt(e.target.value))}
+                          className="form-range"
+                        />
+                      </div>
+
+                      {/* Micro specs */}
+                      <div className="row g-2 font-mono" style={{ fontSize: '0.75rem' }}>
+                        <div className="col-6 text-secondary">
+                          TEMP STATUS: <span className={node.temp > 55 ? 'text-neon-rose' : 'text-white'}>{node.temp}°C</span>
+                        </div>
+                        <div className="col-6 text-secondary text-end">
+                          LATENCY INDEX: <span className="text-neon-emerald">{12 + Math.floor(node.load / 10)}ms</span>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 5: REPORTS COMPILER */}
+          {activeTab === 'reports' && (
+            <div className="row g-4 justify-content-center">
+              <div className="col-12 col-md-8 col-xl-6">
+                <div className="glass-card p-4">
+                  <div className="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary border-opacity-20">
+                    <div>
+                      <h4 className="text-white h5 mb-1 fw-bold">Dossier Brief Compiler</h4>
+                      <p className="text-secondary small mb-0">Select database layers to build and sign custom analytical reports.</p>
+                    </div>
+                    <span className="material-symbols-outlined text-primary fs-4 animate-pulse-cyber">verified_user</span>
+                  </div>
+
+                  <form className="mb-4">
+                    <div className="d-flex flex-column gap-3 mb-4">
+                      
+                      <label className="d-flex align-items-start gap-3 p-3 bg-black bg-opacity-40 rounded-4 border border-secondary border-opacity-15 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={reportCheckedItems.defense}
+                          onChange={(e) => setReportCheckedItems({ ...reportCheckedItems, defense: e.target.checked })}
+                          className="form-check-input bg-transparent border-secondary mt-1"
+                        />
+                        <div>
+                          <span className="text-white fw-bold d-block small">Maritime Sovereign Defense Records</span>
+                          <span className="text-secondary small d-block" style={{ fontSize: '0.75rem' }}>Includes Sat-Com RF intercept feeds and ship telemetry.</span>
+                        </div>
+                      </label>
+
+                      <label className="d-flex align-items-start gap-3 p-3 bg-black bg-opacity-40 rounded-4 border border-secondary border-opacity-15 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={reportCheckedItems.finance}
+                          onChange={(e) => setReportCheckedItems({ ...reportCheckedItems, finance: e.target.checked })}
+                          className="form-check-input bg-transparent border-secondary mt-1"
+                        />
+                        <div>
+                          <span className="text-white fw-bold d-block small">Quantitative Exchange Volatility Index</span>
+                          <span className="text-secondary small d-block" style={{ fontSize: '0.75rem' }}>Includes high-frequency decentralized contract liquidity audits.</span>
+                        </div>
+                      </label>
+
+                      <label className="d-flex align-items-start gap-3 p-3 bg-black bg-opacity-40 rounded-4 border border-secondary border-opacity-15 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={reportCheckedItems.space}
+                          onChange={(e) => setReportCheckedItems({ ...reportCheckedItems, space: e.target.checked })}
+                          className="form-check-input bg-transparent border-secondary mt-1"
+                        />
+                        <div>
+                          <span className="text-white fw-bold d-block small">LEO Satellite RF Spectrum Analysis</span>
+                          <span className="text-secondary small d-block" style={{ fontSize: '0.75rem' }}>Includes zero-day signal jamming triggers.</span>
+                        </div>
+                      </label>
+
+                      <label className="d-flex align-items-start gap-3 p-3 bg-black bg-opacity-40 rounded-4 border border-secondary border-opacity-15 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={reportCheckedItems.nodes}
+                          onChange={(e) => setReportCheckedItems({ ...reportCheckedItems, nodes: e.target.checked })}
+                          className="form-check-input bg-transparent border-secondary mt-1"
+                        />
+                        <div>
+                          <span className="text-white fw-bold d-block small">Local Hardware Engine Cluster Logs</span>
+                          <span className="text-secondary small d-block" style={{ fontSize: '0.75rem' }}>Includes CPU temperatures and system latency tables.</span>
+                        </div>
+                      </label>
+
+                    </div>
+
+                    {isCompilingReport ? (
+                      <div className="py-2">
+                        <div className="progress mb-2" style={{ height: '6px' }}>
+                          <div className="progress-bar progress-bar-striped progress-bar-animated progress-glow-cyan" style={{ width: `${reportCompileProgress}%` }}></div>
+                        </div>
+                        <span className="text-neon-cyan font-mono small d-block text-center">COMPILING BRIEF DIRECTORY: {reportCompileProgress}%</span>
+                      </div>
+                    ) : (
+                      <Button
+                        variant="primary"
+                        onClick={handleCompileCustomReport}
+                        className="w-100 py-3 border-0 rounded-4 fw-bold shadow-lg"
+                      >
+                        Compile & Secure Sign intelligence Brief (.PDF)
+                      </Button>
+                    )}
+                  </form>
+
+                  <div className="p-3 bg-primary bg-opacity-10 border border-primary border-opacity-20 rounded-4 text-center">
+                    <span className="text-neon-cyan small font-mono d-block mb-1">// DIGITAL SIGNATURE INTEGRITY: SECURE</span>
+                    <span className="text-secondary small" style={{ fontSize: '0.7rem' }}>All PDFs are stamped with cryptographic proof from SkyMind Root Certificate Authority.</span>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          )}
 
         </div>
 

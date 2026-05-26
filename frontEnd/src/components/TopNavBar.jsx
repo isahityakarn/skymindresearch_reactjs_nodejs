@@ -1,6 +1,8 @@
+import { useNavigate } from 'react-router-dom';
 import Button from './ui/Button';
 
-export default function TopNavBar({ onLoginClick, onPortalClick }) {
+export default function TopNavBar() {
+  const navigate = useNavigate();
   return (
     <header className="navbar navbar-expand-lg navbar-dark bg-black bg-opacity-85 fixed-top shadow-lg">
       <div className="container-fluid px-4 px-md-5">
@@ -54,10 +56,8 @@ export default function TopNavBar({ onLoginClick, onPortalClick }) {
             <button className="btn btn-outline-light rounded-circle p-2 d-flex align-items-center justify-content-center" type="button">
               <span className="material-symbols-outlined fs-5">search</span>
             </button>
-            <Button type="button" variant="secondary" size="lg" onClick={onPortalClick} className="border-primary border-opacity-50 text-neon-cyan px-3">
-              Admin Deck
-            </Button>
-            <Button type="button" variant="primary" size="lg" onClick={onLoginClick}>
+
+            <Button type="button" variant="primary" size="lg" onClick={() => navigate('/login')}>
               Login
             </Button>
           </div>
